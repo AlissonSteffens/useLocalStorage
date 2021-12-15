@@ -1,9 +1,8 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export const useLocalStorage = (key, initialValue) => {
-  // State to store our value
-  // Pass initial state function to useState so logic is only executed once
-  const [storedValue, setStoredValue] = useState(() => {
+
+  const getValue = () => {
     try {
       if (typeof window !== "undefined") {
         // Get from local storage by key
@@ -17,7 +16,21 @@ export const useLocalStorage = (key, initialValue) => {
       console.log(error);
       return initialValue;
     }
-  });
+  }
+
+  // State to store our value
+  // Pass initial state function to useState so logic is only executed once
+  const [storedValue, setStoredValue] = useState(getValue());
+
+  const updateValue = () => {
+    setValue(getValue());
+  }
+
+
+  useEffect(() => {
+    setInterval(() => updateValue(), 100);
+  }, []);
+
   // Return a wrapped version of useState's setter function that ...
   // ... persists the new value to localStorage.
   const setValue = (value) => {
@@ -37,15 +50,4 @@ export const useLocalStorage = (key, initialValue) => {
     }
   };
   return [storedValue, setValue];
-}
-
-export const getNewURL = (eventId, filter, posterId) => {
-  let url = "/event/" + eventId;
-  if (filter) {
-    url += "?filter=" + filter;
-  }
-  if (posterId) {
-    url += (filter?"&":"?") + "posterId=" + posterId;
-  }
-  return url;
 }
