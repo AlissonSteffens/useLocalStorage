@@ -22,15 +22,6 @@ export const useLocalStorage = (key, initialValue) => {
   // Pass initial state function to useState so logic is only executed once
   const [storedValue, setStoredValue] = useState(getValue());
 
-  const updateValue = () => {
-    setValue(getValue());
-  }
-
-
-  useEffect(() => {
-    setInterval(() => updateValue(), 100);
-  }, []);
-
   // Return a wrapped version of useState's setter function that ...
   // ... persists the new value to localStorage.
   const setValue = (value) => {
